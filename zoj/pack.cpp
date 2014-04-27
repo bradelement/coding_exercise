@@ -10,7 +10,6 @@
 #include <map>
 #include <iomanip>
 #include <climits>
-                   
 using namespace std;
 
 const int limit = 100010;
