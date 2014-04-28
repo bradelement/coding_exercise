@@ -19,14 +19,14 @@ int n[limit], D[limit];
 int dp[limit];
 
 void ZeroOnePack(int V, int C) {
-    if (V > limit) V = limit;
+    if (V > limit-1) V = limit-1;
     for (int i=V; i>=C; i--) {
         dp[i] |= dp[i-C];
     }
 }
 
 void CompletePack(int V, int C) {
-    if (V > limit) V = limit;
+    if (V > limit-1) V = limit-1;
     for (int i=C; i<=V; i++) {
         dp[i] |= dp[i-C];
     }
