@@ -30,7 +30,7 @@ int main()
 			
 			dp[i] = a + b;
 			if (dp[i] >= MOD) dp[i] -= MOD;
-			if (dp[i] < 0) dp[i] += MOD;
+			else if (dp[i] < 0) dp[i] += MOD;
 		}
 		printf("%d\n", dp[n]);
 	}
