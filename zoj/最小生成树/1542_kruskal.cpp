@@ -44,6 +44,7 @@ void kruskal()
             }
             pre[b] = a;
             put[count++] = i;
+            if (count == n-1) break;
         }
     }
 

@@ -13,6 +13,7 @@ struct Edge
 
 const int MAXN = 751;
 int N, M, edge_count;
+int group;
 
 pair<int, int> loc[MAXN];
 Edge edges[MAXN * MAXN];
@@ -37,6 +38,7 @@ void input()
         pre[i] = i;
     }
     edge_count = 0;
+    group = N;
     for (int i=1; i<=N; i++) {
         for (int j=i+1; j<=N; j++) {
             edges[edge_count].x = i;
@@ -53,19 +55,24 @@ void input()
     for (int i=1; i<=M; i++) {
         scanf("%d%d", &a, &b);
         a = find(a); b = find(b);
-        if (a != b) pre[a] = b;
+        if (a != b) {
+            pre[a] = b;
+            group--;
+        }
     }
 }
 
 void kruskal()
 {
     int a, b;
+    if (group == 1) return;
     for (int i=0; i<edge_count; i++) {
         a = find(edges[i].x);
         b = find(edges[i].y);
         if (a!=b) {
             printf("%d %d\n", edges[i].x, edges[i].y);
             pre[a] = b;
+            if (--group == 1) break;
         }
     }
 }
