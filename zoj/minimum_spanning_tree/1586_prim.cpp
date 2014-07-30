@@ -9,31 +9,31 @@ int N;
 int adapter[MAXN];
 int map[MAXN][MAXN];
 int dis[MAXN];
-int hash[MAXN];
+int visited[MAXN];
 
 int prim()
 {
     int sum = 0;
-    memset(hash, 0, sizeof(hash));
+    memset(visited, 0, sizeof(visited));
     for (int i=1; i<=N; i++) {
         dis[i] = INT_MAX;
     }
     int now = 1;
-    dis[now] = 0; hash[now] = 1;
+    dis[now] = 0; visited[now] = 1;
 
     for (int i=1; i<N; i++) {
         for (int j=1; j<=N; j++) {
-            if (!hash[j] && dis[j]>map[now][j]) {
+            if (!visited[j] && dis[j]>map[now][j]) {
                 dis[j] = map[now][j];
             }
         }
         for (int j=1, min=INT_MAX; j<=N; j++) {
-            if (!hash[j] && dis[j]<min) {
+            if (!visited[j] && dis[j]<min) {
                 min = dis[j];
                 now = j;
             }
         }
-        hash[now] = 1;
+        visited[now] = 1;
         sum += dis[now];
     }
     return sum;
