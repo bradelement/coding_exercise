@@ -47,7 +47,7 @@ void input()
     end = m[b];
 }
 
-double dijkstra(int casen)
+int dijkstra()
 {
     memset(visited, 0, sizeof(visited));
     memset(dis, 0, sizeof(dis));
@@ -71,8 +71,8 @@ double dijkstra(int casen)
         }
         visited[now] = 1;
     }
-    std::cout << "Scenario #" << casen << std::endl;
-    std::cout << dis[end] << " tons" << std::endl << std::endl;
+    
+    return dis[end];
 }
 
 int main(int argc, char const *argv[])
@@ -80,7 +80,9 @@ int main(int argc, char const *argv[])
     int casen = 1;
     while (std::cin >> n >> r, n) {
         input();
-        dijkstra(casen++);
+        int ans = dijkstra();
+        std::cout << "Scenario #" << casen++ << std::endl;
+        std::cout << ans << " tons" << std::endl << std::endl;
     }
     return 0;
 }
