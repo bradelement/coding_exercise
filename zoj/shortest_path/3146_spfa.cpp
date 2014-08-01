@@ -1,5 +1,5 @@
 #include "cstdio"
-#include "set"
+#include "unordered_set"
 #include "algorithm"
 #include "climits"
 #include "queue"
@@ -9,14 +9,20 @@ struct Edge
 {
     int end, len;
     Edge(int a=0, int b=0): end(a), len(b) {}
-    bool operator< (const Edge &e) const {
-        return end < e.end || (end == e.end && len < e.len);
+    bool operator==(const Edge &other) const {
+        return end == other.end && len == other.len;
+    }
+};
+
+struct edge_hash {
+    size_t operator()(const Edge &e) const {
+        return e.end * MAXN + e.len;
     }
 };
 
 int n, m, r, c;
 int forest[MAXN][MAXN];
-std::set<Edge> edges[MAXN * MAXN];
+std::unordered_set<Edge, edge_hash> edges[MAXN * MAXN];
 int start, finish;
 bool inQue[MAXN * MAXN];
 int dis[MAXN * MAXN];
@@ -67,8 +73,7 @@ void spfa()
         cur = que.front(); que.pop();
         inQue[cur] = false;
 
-        for (std::set<Edge>::iterator i=edges[cur].begin(); \
-            i!=edges[cur].end(); ++i) {
+        for (auto i=edges[cur].begin(); i!=edges[cur].end(); ++i) {
             end = i->end;
             len = i->len;
             if (dis[cur] + len < dis[end]) {
