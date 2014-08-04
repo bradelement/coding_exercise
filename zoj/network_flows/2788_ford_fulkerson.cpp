@@ -14,8 +14,7 @@ const int MAXN = 24;
 const int inf = 0x12345678;
 
 std::vector<Edge> edges[MAXN];
-int level[MAXN];
-int iter[MAXN];
+int used[MAXN];
 int m, n, src, sink;
 
 void add_edge(int from, int to, int cap)
@@ -24,31 +23,13 @@ void add_edge(int from, int to, int cap)
     edges[to].push_back(Edge(from, 0, edges[from].size()-1));
 }
 
-void bfs(int s)
-{
-    memset(level, -1, sizeof(level));
-    std::queue<int> que;
-    level[s] = 0;
-    que.push(s);
-    
-    while (!que.empty()) {
-        int v = que.front(); que.pop();
-        for (int i=0; i<edges[v].size(); i++) {
-            Edge &e = edges[v][i];
-            if (e.cap > 0 && level[e.to] < 0) {
-                level[e.to] = level[v] + 1;
-                que.push(e.to);
-            }
-        }
-    } 
-}
-
 int dfs(int v, int t, int f)
 {
     if (v == t) return f;
-    for (int &i=iter[v]; i<edges[v].size(); i++) {
+    used[v] = 1;
+    for (int i=0; i<edges[v].size(); i++) {
         Edge &e = edges[v][i];
-        if (e.cap > 0 && level[v] < level[e.to]) {
+        if (!used[e.to] && e.cap > 0) {
             int d = dfs(e.to, t, std::min(f, e.cap));
             if (d > 0) {
                 e.cap -= d;
@@ -60,16 +41,14 @@ int dfs(int v, int t, int f)
     return 0;
 }
 
-int dinic(int s, int t)
+int max_flow(int s, int t)
 {
-    int flow = 0, f;
+    int flow = 0;
     for (;;) {
-        bfs(s);
-        if (level[t] < 0) return flow;
-        memset(iter, 0, sizeof(iter));
-        while ((f = dfs(s, t, inf)) > 0) {
-            flow += f;
-        }
+        memset(used, 0, sizeof(used));
+        int f = dfs(s, t, inf);
+        if (f == 0) return flow;
+        flow += f;
     }
 }
 
@@ -101,7 +80,7 @@ int main(int argc, char const *argv[])
     scanf("%d", &casen);
     while (casen--) {
         input();
-        int ans = dinic(src, sink);
+        int ans = max_flow(src, sink);
         if (ans >= inf) {
             printf("PANIC ROOM BREACH\n");
         }
