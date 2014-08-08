@@ -17,8 +17,8 @@ struct Edge {
 
 std::vector<Edge> ve[2][MAXN];
 int dis[MAXN];
-bool visited[MAXN];
-std::priority_queue<Edge> que;
+typedef std::pair<int, int> Pii;
+std::priority_queue<Pii> que;
 
 void input()
 {
@@ -38,35 +38,29 @@ void input()
 
 int dijkstra(int idx)
 {
-    std::fill(visited, visited+P+1, false);
     std::fill(dis, dis+P+1, inf);
-
     while (!que.empty()) que.pop();
-    int now = 1, cur, curwei, maxt;
-    dis[now] = 0; visited[now] = true;
-    for (int i=0; i<ve[idx][now].size(); i++) {
-        que.push(ve[idx][now][i]);
-        dis[ve[idx][now][i].id] = ve[idx][now][i].weight;
-    }
+    int start = 1;
+    dis[start] = 0;
+    que.push(std::make_pair(start, 0));
 
-    int ret = 0;
-    Edge ce;
+    Pii ce;
     while (!que.empty()) {
         ce = que.top(); que.pop();
-        if (!visited[ce.id]) {
-            visited[ce.id] = true;
-            ret += dis[ce.id];
-            for (int i=0; i<ve[idx][ce.id].size(); i++) {
-                cur = ve[idx][ce.id][i].id;
-                curwei = ve[idx][ce.id][i].weight;
-                if (!visited[cur] && dis[cur] > dis[ce.id]+curwei) {
-                    dis[cur] = dis[ce.id] + curwei;
-                    que.push(ve[idx][ce.id][i]);
-                }
+        int now = ce.first;
+        if (dis[now] != ce.second) continue;
+        
+        for (int i=0; i<ve[idx][now].size(); i++) {
+            Edge &e = ve[idx][now][i];
+            if (dis[e.id] > dis[now]+e.weight) {
+                dis[e.id] = dis[now]+e.weight;
+                que.push(std::make_pair(e.id, dis[e.id]));
             }
         }
     }
-
+    
+    int ret = 0;
+    for (int i=1; i<=P; i++) ret += dis[i];
     return ret;
 }
 

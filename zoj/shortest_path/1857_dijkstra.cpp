@@ -44,32 +44,25 @@ void input()
     }
 }
 
+typedef std::pair<int, int> P;
+
 void dijkstra(int start, int *dis)
 {
-    std::fill(visited, visited+m+1, false);
-    std::priority_queue<Edge> que;
+    std::priority_queue<P> que;
     dis[start] = 0;
-    visited[start] = true;
-    for (int i=0; i<edges[start].size(); i++) {
-        que.push(edges[start][i]);
-        if (edges[start][i].len < dis[edges[start][i].end]) {
-            dis[edges[start][i].end] = edges[start][i].len;
-        }
-    }
+    que.push(std::make_pair(start, 0));
 
-    Edge ce;
+    P ce;
     while (!que.empty()) {
         ce = que.top(); que.pop();
-        int now = ce.end;
-        if (!visited[now]) {
-            visited[now] = true;
-            for (int i=0; i<edges[now].size(); i++) {
-                int end = edges[now][i].end;
-                int len = edges[now][i].len;
-                if (!visited[end] && dis[end] > dis[now]+len) {
-                    dis[end] = dis[now]+len;
-                    que.push(edges[now][i]);
-                }
+        int now = ce.first;
+        if (dis[now] != ce.second) continue;
+
+        for (int i=0; i<edges[now].size(); i++) {
+            Edge &e = edges[now][i];
+            if (dis[e.end] > dis[now] + e.len) {
+                dis[e.end] = dis[now] + e.len;
+                que.push(std::make_pair(e.end, dis[e.end]));
             }
         }
     }
