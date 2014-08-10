@@ -5,11 +5,11 @@
 #include <algorithm>
 using namespace std;
 
-typedef  struct {int v,next,val;} edge;
-const int MAXN=128;
-const int MAXM=MAXN*MAXN*2;
+typedef struct {int v,next,val;} edge;
+const int MAXN = 128;
+const int MAXM = MAXN * MAXN * 2;
 edge e[MAXM];
-int p[MAXN],eid;
+int p[MAXN], eid;
 inline void init(){memset(p,-1,sizeof(p));eid=0;}
 //有向
 inline void insert1(int from,int to,int val)
@@ -33,11 +33,12 @@ inline void insert2(int from,int to,int val)
     e[eid].next=p[from];
     p[from]=eid++;
 }
-int n,m,np,nc;//n为点数 m为边数
+int n, m;//n为点数 m为边数
+int np, nc;
 int h[MAXN];
 int gap[MAXN];
-int source,sink;
-inline int dfs(int pos,int cost)
+int source, sink;
+inline int dfs(int pos, int cost)
 {
     if (pos==sink) return cost;
 
