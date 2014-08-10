@@ -2,3 +2,4 @@
 
 dinic 20ms
 isap  30ms
+edmond_karp 620ms...
