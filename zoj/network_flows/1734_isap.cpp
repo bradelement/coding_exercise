@@ -53,7 +53,7 @@ struct Isap
             int x = Q.front(); Q.pop();
             for (int i=0; i<G[x].size(); i++) {
                 Edge &e = edges[G[x][i]];
-                if (!vis[e.to] && e.cap > e.flow) {
+                if (!vis[e.to]) {
                     vis[e.to] = 1;
                     d[e.to] = d[x] + 1;
                     Q.push(e.to);

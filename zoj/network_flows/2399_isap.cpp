@@ -53,7 +53,7 @@ struct Isap
             int x = Q.front(); Q.pop();
             for (int i=0; i<G[x].size(); i++) {
                 Edge &e = edges[G[x][i]];
-                if (!vis[e.to] && e.cap > e.flow) {
+                if (!vis[e.to]) {
                     vis[e.to] = 1;
                     d[e.to] = d[x] + 1;
                     Q.push(e.to);
@@ -130,8 +130,9 @@ struct Isap
 
 Isap isap;
 int n, m;
-int src, sink, x, sink_start, sink_end;
+int src, sink, x;
 char line[32];
+int sink_start, sink_end;
 
 void input()
 {
@@ -154,11 +155,11 @@ void input()
 
 bool check(int f)
 {
-    for (int i=0; i<isap.m; i++) {
-        isap.edges[i].flow = 0;
-    }
     for (int i=sink_start; i<sink_end; i+=2) {
         isap.edges[i].cap = f;
+    }
+    for (int i=0; i<isap.m; i++) {
+        isap.edges[i].flow = 0;
     }
     return isap.maxflow(src, sink) == n;
 }
@@ -167,7 +168,8 @@ int main(int argc, char const *argv[])
 {
     while (scanf("%d%d", &n, &m), n) {
         input();
-        int ans = n, l = n/m, r = n;
+        int ans = n;
+        int l = n/m, r = n;
         while (l <= r) {
             int mid = (l+r) / 2;
             if (check(mid)) {

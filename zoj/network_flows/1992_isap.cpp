@@ -3,7 +3,7 @@
 #include "vector"
 #include "queue"
 
-const int MAXN = 20480;
+const int MAXN = 256;
 const int inf = 0x12345678;
 
 struct Edge
@@ -127,3 +127,89 @@ struct Isap
         return flow;
     }
 };
+
+/*
+欧拉回路：
+无向图: 每个顶点的度数都是偶数。
+有向图: 每个顶点的入度等于出度。
+混合图: 网络流~。
+    1. 把无向边随便定向，计算每个点的入度和出度。
+    如有顶点的出入度差为奇数，则无欧拉回路。
+
+    2. 构造网络流，无向边随意定向并add_edge, cap为1。
+    新建src, sink. 对于入大于出的点u连接(u, sink) cap为diff/2
+    对于出大于入的点v连接(src, v) cap为diff/2
+    查看是否有满流即可。。。
+*/
+
+Isap isap;
+int m, s;
+int in[MAXN], out[MAXN];
+int src, sink;
+int b[MAXN][MAXN];
+
+bool gao()
+{
+    memset(in, 0, sizeof(in));
+    memset(out, 0, sizeof(out));
+    memset(b, 0, sizeof(b));
+
+    scanf("%d%d", &m, &s);
+    isap.init(m+2);
+    int x, y, d;
+
+    for (int i=0; i<s; i++) {
+        scanf("%d%d%d", &x, &y, &d);
+        if (d == 0) {
+            b[x][y]++;
+        }
+        out[x]++;
+        in[y]++;
+    }
+
+    for (int i=1; i<=m; i++) {
+        if ((in[i]-out[i]) & 1) {
+            return false;
+        }
+    }
+    for (int i=1; i<=m; i++) {
+        for (int j=1; j<=m; j++) {
+            if (b[i][j]) {
+                isap.add_edge(i, j, b[i][j]);
+            }
+        }
+    }
+
+    src = 0; sink = m+1;
+    int full = 0;
+    for (int i=1; i<=m; i++) {
+        if (in[i] > out[i]) {
+            isap.add_edge(i, sink, (in[i] - out[i]) / 2);
+        }
+        else if (in[i] < out[i]) {
+            isap.add_edge(src, i, (out[i] - in[i]) / 2);
+            full += (out[i] - in[i]) / 2;
+        }
+    }
+
+    return isap.maxflow(src, sink) == full;
+}
+
+int main(int argc, char const *argv[])
+{
+    int casen;
+    scanf("%d", &casen);
+
+    while (casen--) {
+        bool ret = gao();
+        if (ret) {
+            puts("possible");
+        }
+        else {
+            puts("impossible");
+        }
+    }
+
+    return 0;
+}
+
