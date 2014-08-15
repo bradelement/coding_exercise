@@ -23,9 +23,8 @@ struct Isap
     int p[MAXN];
     int num[MAXN];
     
-    void init(int n, int m) {
+    void init(int n) {
         this->n = n;
-        this->m = m;
         edges.clear();
     }
     
