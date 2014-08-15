@@ -25,7 +25,13 @@ struct Isap
     
     void init(int n) {
         this->n = n;
+        this->m = 0;
         edges.clear();
+        for (int i=0; i<MAXN; i++) {
+            G[i].clear();
+        }
+        memset(p, 0, sizeof(p));
+        memset(d, 0, sizeof(d));
     }
     
     void add_edge(int from, int to, int cap) {

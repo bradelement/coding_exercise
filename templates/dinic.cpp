@@ -23,6 +23,7 @@ struct Dinic
     
     void init() {
         edges.clear();
+        for (int i=0; i<MAXN; i++) G[i].clear();
     }
     
     void add_edge(int from, int to, int cap) {
