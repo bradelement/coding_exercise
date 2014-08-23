@@ -9,7 +9,8 @@ bool vis[1<<10][MAXN];
 
 struct State
 {
-    int cur_digit, mod, mask, pre;
+    short int cur_digit, mod, mask;
+    int pre;
     State(int a=0, int b=0, int c=0, int d=0): cur_digit(a), mod(b), mask(c), pre(d) {}
 };
 
