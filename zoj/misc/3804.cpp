@@ -50,7 +50,7 @@ inline int icount(int x, int y, char c)
     return ret;
 }
 
-void _change(int x, int y)
+inline void _change(int x, int y)
 {
     if (grid[x][y] == 'X') {//left
         return;
@@ -73,7 +73,7 @@ void _change(int x, int y)
     }
 }
 
-void leave(int day)
+inline void leave(int day)
 {
     while (ck < K) {
         if (msg[ck].t == day) {
@@ -87,15 +87,8 @@ void leave(int day)
     }
 }
 
-void _gao(int day)
+inline void _gao(int day)
 {
-    /*
-    for (int i=1; i<=N; i++) {
-        for (int j=1; j<=M; j++) {
-            new_grid[i][j] = grid[i][j];
-        }
-    }*/
-    memcpy(new_grid, grid, sizeof(new_grid));
     for (int i=1; i<=N; i++) {
         for (int j=1; j<=M; j++) {
             _change(i, j);
