@@ -18,11 +18,11 @@ void dfs(int i1, int i2, std::vector<char> &output, std::stack<char> &sc) {
     }
     
     if (i1 < len1) {
-        sc.push(line1[i1]);
         output.push_back('i');
+        sc.push(line1[i1]);
         dfs(i1+1, i2, output, sc);
-        output.pop_back();
         sc.pop();
+        output.pop_back();
     }
     if (!sc.empty()) {
         if (line2[i2] == sc.top()) {
