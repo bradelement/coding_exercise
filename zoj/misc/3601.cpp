@@ -2,6 +2,7 @@
 #include "unordered_map"
 #include "unordered_set"
 #include "vector"
+#include "cstring"
 #include "string"
 using namespace std;
 
@@ -9,28 +10,44 @@ const int MAXN = 60000;
 const int MAXLEN = 21;
 int n, m, q;
 
+struct hashfun
+{
+    int operator()(const char *s) const {
+        int seed = 13;
+        int ret = 0;
+        while (*s) {
+            ret = ret * seed + (*s++);
+        }
+        return ret;
+    }
+};
+
+struct cmpfun
+{
+    bool operator()(const char *s1, const char *s2) const {
+        return strcmp(s1, s2) == 0;
+    }
+};
+
 char name[MAXN][MAXLEN];
 vector<vector<string> > love;
 int rel[MAXN];
 char tmpname[MAXLEN];
-unordered_map<string, int> name_to_id;
+unordered_map<const char *, int, hashfun, cmpfun> id;
 unordered_set<long long> sp;
 
 inline long long shash(long long a, int b) {
     return a * MAXN + b;
 }
 
-inline int id(const string &s) {
-    return name_to_id[s];
-}
 
 void input() {
-    name_to_id.clear();
+    id.clear();
     scanf("%d%d%d", &n, &m, &q);
     love.resize(n+m);
     for (int i=0; i<n+m; i++) {
         scanf("%s%d", name[i], &rel[i]);
-        name_to_id.insert(make_pair(name[i], i));
+        id.insert(make_pair(name[i], i));
         love[i].resize(rel[i]);
         for (int j=0; j<rel[i]; j++) {
             scanf("%s", tmpname);
@@ -41,7 +58,7 @@ void input() {
     sp.clear();
     for (int i=0; i<n+m; i++) {
         for (int j=0; j<rel[i]; j++) {
-            sp.insert(shash(i, id(love[i][j])));
+            sp.insert(shash(i, id[love[i][j].c_str()]));
         }
     }
 }
@@ -83,7 +100,7 @@ int main(int argc, char const *argv[])
             vi.resize(att);
             for (int j=0; j<att; j++) {
                 scanf("%s", tmpname);
-                vi[j] = id(tmpname);
+                vi[j] = id[tmpname];
             }
             gao(vi);
         }
