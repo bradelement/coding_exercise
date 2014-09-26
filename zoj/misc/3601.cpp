@@ -6,7 +6,7 @@
 #include "string"
 using namespace std;
 
-const int MAXN = 60000;
+const int MAXN = 60006;
 const int MAXLEN = 21;
 int n, m, q;
 
@@ -30,8 +30,7 @@ struct cmpfun
 };
 
 char name[MAXN][MAXLEN];
-vector<vector<string> > love;
-int rel[MAXN];
+int next_id;
 char tmpname[MAXLEN];
 unordered_map<const char *, int, hashfun, cmpfun> id;
 unordered_set<long long> sp;
@@ -40,39 +39,42 @@ inline long long shash(long long a, int b) {
     return a * MAXN + b;
 }
 
+inline int gen_id(const char *s) {
+    unordered_map<const char *, int, hashfun, cmpfun>::iterator it = id.find(s);
+    if (it != id.end()) {
+        return it->second; 
+    }
+    id.insert(make_pair(s, next_id));
+    return next_id++;
+}
 
 void input() {
     id.clear();
-    scanf("%d%d%d", &n, &m, &q);
-    love.resize(n+m);
-    for (int i=0; i<n+m; i++) {
-        scanf("%s%d", name[i], &rel[i]);
-        id.insert(make_pair(name[i], i));
-        love[i].resize(rel[i]);
-        for (int j=0; j<rel[i]; j++) {
-            scanf("%s", tmpname);
-            love[i][j] = tmpname;
-        }
-    }
-
     sp.clear();
+    next_id = 0;
+    scanf("%d%d%d", &n, &m, &q);
+    int tot;
     for (int i=0; i<n+m; i++) {
-        for (int j=0; j<rel[i]; j++) {
-            sp.insert(shash(i, id[love[i][j].c_str()]));
+        scanf("%s%d", name[next_id], &tot);
+        int sid = gen_id(name[next_id]);
+        for (int j=0; j<tot; j++) {
+            scanf("%s", name[next_id]);
+            int tid = gen_id(name[next_id]);
+            sp.insert(shash(sid, tid));
         }
     }
 }
 
-vector<int> vi;
+int vi[MAXN];
 
-void gao(const vector<int> &vi) {
+void gao(int vi[], int tot) {
     int cur = vi[0];
-    for (int i=1; i<vi.size(); i++) {
+    for (int i=1; i<tot; i++) {
         if (sp.count(shash(vi[i], cur)) || !sp.count(shash(cur, vi[i]))) cur = vi[i];
     }
 
     bool flag = true;
-    for (int i=0; i<vi.size(); i++) {
+    for (int i=0; i<tot; i++) {
         if (vi[i] == cur) continue;
         if (sp.count(shash(vi[i], cur)) || !sp.count(shash(cur, vi[i]))) {
             flag = false;
@@ -97,12 +99,11 @@ int main(int argc, char const *argv[])
         input();
         for (int i=0; i<q; i++) {
             scanf("%d", &att);
-            vi.resize(att);
             for (int j=0; j<att; j++) {
                 scanf("%s", tmpname);
                 vi[j] = id[tmpname];
             }
-            gao(vi);
+            gao(vi, att);
         }
         printf("\n");
     }
